@@ -3,29 +3,38 @@ package core;
 import org.openqa.selenium.*;
 import org.openqa.selenium.safari.SafariDriver;
 
-import java.util.Base64;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Scanner;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 
 
 
+
 public class Safari {
 
 	static WebDriver driver;
-	
+
 	static Cipher cipher;
-	
+	//	public static String encrypt(String plainText, SecretKey secretKey) throws Exception {
+	//	cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+	//	String encryptedText = Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes()));
+	//	return encryptedText;
+ 
+//}
+
+
 	public static String decrypt(String encryptedText, SecretKey secretKey) throws Exception {
 		cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, secretKey);
 		String decryptedText = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedText)));
 		return decryptedText;
-	}
+ 
+}
 	
 	
 	
@@ -76,11 +85,13 @@ Thread.sleep(500); // Pause in milleseconds (1000 – 1 sec)
 		
 		driver.findElement(By.id("email")).sendKeys(email_address);
 		driver.findElement(By.id("pass")).sendKeys(password);
-        driver.findElement(By.id("u_0_2")).click();
-        driver.findElement(By.id("u_0_5")).click();
+		Thread.sleep(1000);
+		driver.findElement(By.id("u_0_2")).click();
+		//Thread.sleep(1000);
+		//driver.findElement(By.id("u_0_5")).click();
         
         Thread.sleep(1000);
-        driver.findElement(By.xpath("//*[@id='u_0_a']/div[1]/div[1]")).click();
+        driver.findElement(By.xpath("//*[@id=\"u_0_a\"]/div[1]/div[1]/div/a/span")).click();
         
         
         Thread.sleep(1000);
@@ -93,7 +104,7 @@ Thread.sleep(500); // Pause in milleseconds (1000 – 1 sec)
         
 		driver.quit();
         
-		System.out.println("Browser is: Safari 11");
+		System.out.println("Browser is: Safari 11.0");
         System.out.println("Title of the page: " + title);
         System.out.println("Copyright: " + copyright);
         System.out.println("You have " + friends + " friends");

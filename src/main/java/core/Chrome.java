@@ -44,6 +44,7 @@ public class Chrome {
 
 		public static void main(String[] args) throws Exception {
 		
+		// --- get MAC-Address ---
 		String mac_address;
 		
 		String cmd_mac = "ifconfig en0";
