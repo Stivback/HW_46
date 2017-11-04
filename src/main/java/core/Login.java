@@ -1,77 +1,46 @@
+//Safari Alex Exemple
+
+
+
 package core;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Scanner;
+import org.openqa.selenium.*;
+import org.openqa.selenium.safari.SafariDriver;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
-import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-public class Login {
+public class Safari {
 
-	static WebDriver driver;
-	static final String baseUrl = "http://alex.academy/exe/login/";
-	final static long start = System.currentTimeMillis();
-
+	static String username = "alex";
+	static String password = "password";
 	
-	
-	String url = "http://alex.academy/exe/login/index.html";
-
-	public static void getDriver() {
+	public static void main(String[] args) throws InterruptedException {
 		Logger.getLogger("").setLevel(Level.OFF);
-		
-		WebDriver driver = new HtmlUnitDriver();
-		((HtmlUnitDriver) driver).setJavascriptEnabled(true);
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 		String url = "http://alex.academy/exe/login/index.html";
+
+		if (!System.getProperty("os.name").contains("Mac")) 
+			throw new IllegalArgumentException("Safari is available only on Mac");
+
+		WebDriver driver = new SafariDriver();
+		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+		driver.manage().window().maximize();
+
 		driver.get(url);
 
-	}
-
-	public static String login(String username, String password) throws InterruptedException {
-		Logger.getLogger("").setLevel(Level.OFF);
-		
-		WebDriver driver = new HtmlUnitDriver();
-		((HtmlUnitDriver) driver).setJavascriptEnabled(true);
-		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-		String url = "http://alex.academy/exe/login/index.html";
-		driver.get(url);
-		
 		String result = null;
 		driver.findElement(By.id("id_useranme")).sendKeys(username);
 		driver.findElement(By.id("id_password")).sendKeys(password);
-		driver.findElement(By.id("id_login_button")).submit();
+		
+		WebElement submit = driver.findElement(By.id("id_login_button"));
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", submit);
+		
 		Thread.sleep(200);
 		if (!driver.getTitle().equals("welcome")) {
 			result = "Login failed: " + driver.findElement(By.id("ErrorLineEx")).getText();
-		} else if (driver.getTitle().equals("welcome")) {
-			result = "Login success";
-		}
-		driver.close();
-		return result;
-		
-	}
+		} else result = "Login success";
 
-	public static void main(String[] args) throws Exception {
+		System.out.println(result);
 
-		String username = "alex";
-		// String password = "password";
-		String mac_address = new Scanner(Runtime.getRuntime().exec("ifconfig en0").getInputStream()).useDelimiter("\\A").next().split(" ")[4];
-
-		System.out.println(login(username, decrypt("UefMcE7rOkNfxEi4myffKw==", new SecretKeySpec(Arrays.copyOf(mac_address.getBytes("UTF-8"), 16), "AES"))));
-	}
-
-	public static String decrypt(String encryptedText, SecretKey secretKey) throws Exception {
-		Cipher cipher;
-		cipher = Cipher.getInstance("AES");
-		cipher.init(Cipher.DECRYPT_MODE, secretKey);
-		String decryptedText = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedText)));
-		return decryptedText;
+		driver.quit();
 	}
 }
