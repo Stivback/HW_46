@@ -24,7 +24,7 @@ public class Encrypt {
 	public static void main(String[] args) throws Exception {
 		cipher = Cipher.getInstance("AES");
 		String password = ""; //Password here
-		String key = "48:d7:05:c2:fc:fd"; //MAC ADDRESS here
+		String key = ""; //MAC ADDRESS here
 		key = key.replaceAll("-", ":"); //00-0c-90....... => 00:0c:90.......
 		
 		
